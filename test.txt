@@ -3,4 +3,6 @@ hogehoge
 Masterブランチ
 Hogehoge
 
+Master branch2
+
 
