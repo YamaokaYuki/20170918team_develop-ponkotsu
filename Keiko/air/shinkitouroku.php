@@ -1,3 +1,150 @@
+<?php
+
+// signup.phpで実装すること
+// ①バリデーション（検証すること）
+// ②プロフィール画像をアップロード
+// ③セッションデータを使用して、データを一時的に保存
+// ④Checkページへ移動する
+// 
+// POST送信されたときのデータを確認
+// var_dumpはデバッグコマンド
+// 本番ではコメントアウト（開発時のみ）
+
+	// var_dump($_POST);
+	// echo'<br>';
+
+	// isset()は使い方にコツがいる。
+	// 例：
+	// isset(1)=>true
+	// isset('ああああ')=>true
+	// $hoge='';
+	// isset($hoge);=>true
+	// // これがtrueになってしまう
+
+	// セッションを使う時のルール
+	// おまじないを記載
+	// $_SESSIONを使う時にはsession_start()関数を記述する。
+	session_start();
+
+
+	// 初期値を設定
+	$username='';
+	$email='';
+	$password='';
+
+
+	if (!empty($_POST)) {
+
+		// isset()とempty()
+		// issetは存在する場合、trueを返す
+		// emptyは存在しない場合、trueを返す
+
+		// !isset()の場合、issetの逆の結果となる
+		// !empty()の場合、emptyと逆の結果になる
+
+		// ここのif()に入った時点で必ずデータは存在する
+		$username=$_POST['username'];
+		$email=$_POST['email'];
+		$password=$_POST['password'];
+
+		// バリデーションチェック処理
+		// 空の文字の場合はエラーを出してあげる。
+
+		// エラーの件数チェック
+		$errors=array();
+
+		// バリデーション（検証）として空文字かどうかチェック
+		if($username==''){
+			// 空文字の場合は連想配列['username']が存在するようにする
+			$errors['username']='blank';
+		}elseif ($username=='hogehoge') {
+			$errors['username']='hogehoge';
+		}
+
+		if($email==''){
+			$errors['email']='blank';
+		}
+
+		if($password==''){
+			$errors['password']='blank';
+		}elseif (strlen($password)<4) {
+			// strlen()関数　文字の数をカウントする
+			// 例：
+			// $count=strlen('hogehoge');
+			// $countには8という数字がか入ります。
+
+			$errors['password']='length';
+		}
+
+
+		// アップロードする画像をバリデーションする
+		// $_FILES スーパーグローバル変数
+		// formタグ内にenctype='multipart/form-date'が必要
+		// ②「①」のformタグ内のinputタグのtype='file'が必要
+
+		// 画像のバリデーション処理
+		$fileName=$_FILES['profile_image']['name'];
+		// $_FILES['ここはinputタグのname="キー”が入る']
+		// $_FILES['key']['name']
+		// これでアップロードされたファイル名が取得できる
+
+		// var_dump($fileName);exit;
+
+		if (!empty($fileName)) {
+			// ここでチェックする内容
+			// 画像の拡張子チェックを行う
+			// プログラムでは、拡張子により挙動が変化する
+
+			// 後ろから3文字を抜き出す
+			$ext=substr($fileName, -3);
+			$ext=strtolower($ext);
+			echo'拡張子'.$ext.'です<br>';
+			if($ext !='jpg'&& $ext !='png'&&$ext!='gif'){
+				// ここに入れば、拡張子が[jpg,png,gif]以外である
+				$errors['profile_image']='extension';
+			}
+		}else{
+			// 画像を選択しなかった場合
+			$errors['profile_image']='blank';
+		}
+
+		// ...
+		// 画像のバリデーション処理 終了
+
+		// バリデーションがOKなら画像をアップロードする
+
+		// echo'「確認画面へ」というボタン押しましたね？';
+
+		if (empty($errors)) {
+			// $errorsが空のままだったら、バリデーションOKとする。
+			// バリデーションがOKなら画像をアップロードする
+
+			// move_uploaded_file(設定１,設定２)関数
+			// 画像をアップロードするための関数
+
+			move_uploaded_file($_FILES['profile_image']['tmp_name'],'../profile_image/'.$username.'_'.$_FILES['profile_image']['name']);
+
+			echo 'エラーがありません。確認画面へ移動します';
+
+			// セッションデータを一時的に保存
+			// ブラウザが終了するまで
+			$_SESSION['user_info']['username']=$username;
+			$_SESSION['user_info']['email']=$email;
+			$_SESSION['user_info']['password']=$password;
+			$_SESSION['user_info']['profile_image']=$username.'_'.$_FILES['profile_image']['name'];
+
+
+
+			// リダイレクト（ポスト送信を破棄してリンクを飛ばす）
+			header('Location: check.php');
+			exit();
+			
+		}
+	}
+
+?>
+
+
 <!DOCTYPE HTML>
 <html lang="ja">
 	<head>
@@ -103,16 +250,6 @@
 				<div class="text-center">
 					<div class="display-t js-fullheight">
 						<div class="display-tc js-fullheight animate-box" data-animate-effect="fadeIn">
-<<<<<<< HEAD
-<<<<<<< HEAD
-								<p class="topimage">
-								  <img src="images/topimage.jpg">
-								</p>
-							<p><a class="btn btn-primary btn-lg btn-demo" href="#"></i> View Demo</a> <a class="btn btn-primary btn-lg btn-learn">Learn More</a></p>
-=======
-=======
-
->>>>>>> yuki
 							<img src="images/topimage.jpg" width=100% heigjt=70%>
 						<!-- 	<br>
 							<br>
@@ -121,16 +258,10 @@
 
 
 								<a class="btn btn-primary btn-lg btn-learn">New Q&A</a></p> -->
-<<<<<<< HEAD
->>>>>>> yuki
-=======
-
 								<!-- <p class="topimage">
 								  <img src="images/topimage.jpg">
 								</p>
 							<p><a class="btn btn-primary btn-lg btn-demo" href="#"></i> View Demo</a> <a class="btn btn-primary btn-lg btn-learn">Learn More</a></p> -->
-
->>>>>>> yuki
 						</div>
 					</div>
 				</div>
@@ -142,11 +273,116 @@
 		<div class="container">
 			<div class="services-padding">
 				<div class="row">
-					<input type="submit" value="質問をしてみる" >
+
+					<h1>新規登録</h1>
+
+	<form method="POST" action="" enctype="multipart/form-data">
+	<!-- フォームタグ内にデータを設定する -->
+	
+	<!-- ユーザ名のデータ -->
+	<label>ユーザ名</label>
+	<br>
+	<input type="text" name="username" placeholder="例: 太郎" value="<?php echo $username;?>">
+	<br>
+
+<!-- 	・条件を分岐させる
+	条件としては、$errors['username']が存在する、かつどういう文字が入っているかで表示を変更する -->
+
+	<?php if (isset($errors['username'])&& $errors['username']=='blank'){?>
+		<div class="alert alert-danger">
+			ユーザ名を入力してください。
+		</div>
+
+	<?php }elseif (isset($errors['username'])&& $errors['username']=='hogehoge') {?>
+		<div class="alert alert-danger">
+			hogehogeというユーザ名は使えません。
+		</div>
+	<?php } ?>
+
+	<!-- メールアドレスのデータ -->
+	<label>メールアドレス</label>
+	<br>
+	<input type="email" name="email" placeholder="nex@seed.jp" value="<?php echo $email;?>">
+	<br>
+
+	<?php if (isset($errors['email'])&& $errors['email']=='blank'){?>
+		<div class="alert alert-danger">
+			メールアドレスを入力してください。
+		</div>
+
+	<?php } ?>
+
+
+	<!-- パスワードのデータ -->
+	<label>パスワード</label>
+	<br>
+	<input type="password" name="password">
+	<br>
+	<br>
+
+		<?php if (isset($errors['password'])&& $errors['password']=='blank'){?>
+		<div class="alert alert-danger">
+			パスワードを入力してください。
+		</div>
+
+		<?php }elseif (isset($errors['password'])&& $errors['password']=='length') {?>
+		<div class="alert alert-danger">
+			パスワードは4文字以上を入力してください。
+		</div>
+	<?php } ?>
+
+	<!-- 確認用パスワードのデータ -->
+	<label>確認用パスワード</label>
+	<br>
+	<input type="password" name="password">
+	<br>
+	<br>
+
+		<?php if (isset($errors['password'])&& $errors['password']=='blank'){?>
+		<div class="alert alert-danger">
+			パスワードを入力してください。
+		</div>
+
+		<?php }elseif (isset($errors['password'])&& $errors['password']=='length') {?>
+		<div class="alert alert-danger">
+			パスワードは4文字以上を入力してください。
+		</div>
+	<?php } ?>
+
+
+	<!-- プロフィール画像のアップロード部分 -->
+	<label>プロフ画像</label>
+	<input type="file" name="profile_image" accept="image/*">
+	<br>
+
+	<?php if (isset($errors['profile_image'])&& $errors['profile_image']=='blank'){?>
+		<div class="alert alert-danger">
+			プロフィール画像を選択してください。
+		</div>
+
+		<?php }elseif (isset($errors['profile_image'])&& $errors['profile_image']=='extension') {?>
+		<div class="alert alert-danger">
+			使用できる拡張子は「jpg」または「png」または「gif」のみです。
+		</div>
+	<?php } ?>
+
+
+
+	<input type="submit" value="確認画面へ">
+
+	</form>
+
+
+
+					<!-- <input type="submit" value="今すぐ無料登録を行う" >
 					<br>
 					<br>
 
-					<input type="submit" value="NEW Q&A" >
+					登録すると利用規約および個人情報の取り扱いについてに同意したことになります
+					<br>
+					<br>
+
+					<input type="submit" value="すでに会員の方はこちら(ログイン)" >
 					<br>
 					<br>
 
@@ -157,7 +393,7 @@
 
 
 
-					<!-- <div class="col-md-4 animate-box">
+					<div class="col-md-4 animate-box">
 						<div class="feature-left">
 							<span class="icon">
 								<i class="icon-hotairballoon"></i>
@@ -250,7 +486,7 @@
 
 
 
-	<div id="fh5co-wireframe">
+	<!-- <div id="fh5co-wireframe">
 		<div class="container">
 			<div class="row animate-box">
 				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
@@ -412,7 +648,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<footer id="fh5co-footer" role="contentinfo">
 						<div class="fh5co-logo" ><a href="index.html"><span style="font-size: 50px; color: black;">　Joynt</span><span>.</span></a></div>
