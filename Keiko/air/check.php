@@ -21,13 +21,21 @@ var_dump($_SESSION);
 		パスワード:●●●●●●●●<br>
 		<img src="../profile_image/<?php echo $_SESSION['user_info']['profile_image']; ?>" width="150">
 
+		<br>
+		<br>
+
+
 	</div>
 
 	<form method="POST" action="">
-	<input type="submit" value="ユーザ登録">
+	<input type="submit" value="編集する">
+
+	<input type="submit" value="登録する">
+
+
 	</form>
 
-	<a href="signup.php">前の画面へ戻る</a><br>
+	<!-- <a href="signup.php">前の画面へ戻る</a><br> -->
 
 
 </body>
