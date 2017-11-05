@@ -7,7 +7,7 @@
 }
 /* =======================================================
 *
-* 	Template Style 
+*   Template Style 
 *
 * ======================================================= */
 body {
@@ -18,6 +18,14 @@ body {
   color: #333333;
   background: #fff;
 }
+
+hr {
+   border:solid #000;
+   border-width:2px 0 0 0;
+   height:1px;/* for IE6 */
+   clear:both;/* for IE6 */
+   margin-top: 2px;
+} 
 
 #page {
   position: relative;
@@ -191,6 +199,7 @@ h1, h2, h3, h4, h5, h6, figure {
 .fh5co-nav ul li.has-dropdown:hover a, .fh5co-nav ul li.has-dropdown:focus a {
   color: #000;
 }
+
 .fh5co-nav ul li.btn-cta a {
   padding: 30px 0px !important;
   color: #fff;
@@ -1481,6 +1490,24 @@ input[type="text"] {
 
 .js .animate-box {
   opacity: 0;
+}
+
+/*すづか、サイドバー*/
+#left {
+color:#676767;
+font-size:13px;
+width:220px;
+float:left;
+}
+.left-title {
+margin:0 15px 0 20px;
+padding:7px 20px;
+font-weight:bold;
+background-color:#E3E3E3;
+color:#333;
+border-top: 1px solid #c7c7c7;
+border-right: 1px solid #c7c7c7;
+border-left: 1px solid #c7c7c7;
 }
 
 /*# sourceMappingURL=style.css.map */
